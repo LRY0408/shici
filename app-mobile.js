@@ -2653,16 +2653,17 @@ class VocabApp {
         let startX = 0, startY = 0, isSwiping = false;
         
         window.addEventListener('touchstart', (e) => {
-            if (this.currentPage !== 'book-study') return;
-            if (!this.bookStudy) return;
+            // 检查是否在学习界面
+            const bookPage = document.getElementById('page-book-study');
+            if (!bookPage || !bookPage.classList.contains('active')) return;
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             isSwiping = true;
         }, { passive: true });
         
         window.addEventListener('touchend', (e) => {
-            if (this.currentPage !== 'book-study') return;
-            if (!this.bookStudy || !isSwiping) return;
+            const bookPage = document.getElementById('page-book-study');
+            if (!bookPage || !bookPage.classList.contains('active') || !isSwiping) return;
             isSwiping = false;
             
             const endX = e.changedTouches[0].clientX;
@@ -2673,9 +2674,11 @@ class VocabApp {
             // 水平滑动大于20px，且水平移动大于垂直移动
             if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 if (deltaX < 0) {
-                    this.bookNextWord(); // 左滑下一个
+                    // 左滑下一个，使用全局函数
+                    if (typeof bookNextWord === 'function') bookNextWord();
                 } else {
-                    this.bookPrevWord(); // 右滑上一个
+                    // 右滑上一个，使用全局函数
+                    if (typeof bookPrevWord === 'function') bookPrevWord();
                 }
             }
         }, { passive: true });
