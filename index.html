@@ -817,14 +817,6 @@
                     <div class="home-menu-arrow">›</div>
                 </button>
 
-                <button class="home-menu-item" id="install-btn" onclick="promptInstall()" style="display:none;">
-                    <div class="home-menu-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">📱</div>
-                    <div class="home-menu-text">
-                        <div class="home-menu-title">添加到桌面</div>
-                        <div class="home-menu-desc">安装到手机/平板，像APP一样使用</div>
-                    </div>
-                    <div class="home-menu-arrow">›</div>
-                </button>
             </div>
         </div>
 
@@ -1226,32 +1218,12 @@
             modal.classList.add('show');
         }
 
-        // 页面加载后更新安装按钮状态，并自动弹出添加到桌面提示
+        // 页面加载后更新安装按钮状态（已移除添加到桌面按钮，保留函数兼容）
         window.addEventListener('load', () => {
-            setTimeout(updateInstallButton, 500);
-            
-            // 未安装时，自动弹出添加到桌面提示（每7天最多弹一次）
-            if (!isInstalled) {
-                setTimeout(() => {
-                    try {
-                        const lastPrompt = localStorage.getItem('shici_last_install_prompt');
-                        const now = Date.now();
-                        const sevenDays = 7 * 24 * 60 * 60 * 1000;
-                        
-                        // 第一次提示，或者距离上次提示超过7天
-                        if (!lastPrompt || (now - parseInt(lastPrompt)) > sevenDays) {
-                            promptInstall();
-                            localStorage.setItem('shici_last_install_prompt', now.toString());
-                        }
-                    } catch(e) {
-                        // localStorage不可用时直接提示
-                        promptInstall();
-                    }
-                }, 2000); // 页面加载2秒后弹出
-            }
+            // 已移除自动弹出添加到桌面提示
         });
 
-        // 检测是否是微信浏览器
+        // 检测是否是微信浏览器（保留变量，已移除特殊引导）
         const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
         
         if ('serviceWorker' in navigator) {
@@ -1293,19 +1265,6 @@
                 });
             });
         }
-        
-        // 微信浏览器特殊处理：显示添加到桌面引导
-        if (isWeChat && !isInstalled) {
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const modal = document.getElementById('ios-install-modal');
-                    if (modal) {
-                        modal.querySelector('.book-complete-title').textContent = '添加到桌面';
-                        modal.querySelector('.book-complete-desc').innerHTML = 
-                            '请点击右上角的 <strong>···</strong> 按钮<br>' +
-                            '然后选择 <strong>"添加到桌面"</strong><br>' +
-                            '即可像APP一样使用拾词<br><br>' +
-                            '<span style="font-size:12px;color:#999;">微信浏览器不支持自动安装，请手动添加</span>';
                         modal.classList.add('show');
                     }
                 }, 2000);

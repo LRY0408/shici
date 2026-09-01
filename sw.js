@@ -1,5 +1,5 @@
 // 拾词 Service Worker - 离线缓存
-const CACHE_NAME = 'shici-v3';
+const CACHE_NAME = 'shici-v4';
 const urlsToCache = [
     './',
     'index.html',
