@@ -117,35 +117,6 @@
             padding: 0 !important;
             margin: 0 !important;
         }
-        body.fullscreen #page-review.active {
-            height: 100vh !important;
-            display: flex !important;
-            flex-direction: column !important;
-            width: 100% !important;
-            overflow: hidden !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        body.fullscreen #page-review.active .review-top-progress {
-            flex-shrink: 0;
-            margin: 0 !important;
-        }
-        body.fullscreen #page-review.active .review-header {
-            flex-shrink: 0;
-            padding: 12px 16px 0 16px;
-        }
-        body.fullscreen #page-review.active .word-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin: 0 16px;
-        }
-        body.fullscreen #page-review.active .review-actions {
-            flex-shrink: 0;
-            padding: 0 16px 16px 16px;
-            margin-top: 0;
-        }
         body.fullscreen #page-book-study {
             max-width: 100%;
             height: 100vh;
@@ -158,17 +129,18 @@
         }
         
         /* 全屏模式下复习页面紧凑布局，确保所有按钮都能显示 */
-        body.fullscreen #page-review.active .review-header { margin-bottom: 8px; padding: 12px 16px 0 16px; }
-        body.fullscreen #page-review.active .word-card { padding: 16px; }
-        body.fullscreen #page-review.active .word-en { font-size: 28px; margin-bottom: 4px; }
-        body.fullscreen #page-review.active .word-phonetic { margin-bottom: 2px; }
-        body.fullscreen #page-review.active .word-pos { margin-bottom: 12px; }
-        body.fullscreen #page-review.active .input-group { margin-bottom: 8px; }
-        body.fullscreen #page-review.active .input-row { margin-bottom: 6px; }
-        body.fullscreen #page-review.active .meaning-input { padding: 10px 12px; font-size: 14px; }
-        body.fullscreen #page-review.active .answer-box { padding: 10px; margin-top: 10px; }
-        body.fullscreen #page-review.active .review-actions { margin-top: 10px; gap: 8px; }
-        body.fullscreen #page-review.active .btn { padding: 12px; font-size: 14px; }
+        body.fullscreen #page-review .review-header { margin-bottom: 8px; }
+        body.fullscreen #page-review .progress-bar { margin-bottom: 10px; }
+        body.fullscreen #page-review .word-card { padding: 16px; }
+        body.fullscreen #page-review .word-en { font-size: 28px; margin-bottom: 4px; }
+        body.fullscreen #page-review .word-phonetic { margin-bottom: 2px; }
+        body.fullscreen #page-review .word-pos { margin-bottom: 12px; }
+        body.fullscreen #page-review .input-group { margin-bottom: 8px; }
+        body.fullscreen #page-review .input-row { margin-bottom: 6px; }
+        body.fullscreen #page-review .meaning-input { padding: 10px 12px; font-size: 14px; }
+        body.fullscreen #page-review .answer-box { padding: 10px; margin-top: 10px; }
+        body.fullscreen #page-review .review-actions { margin-top: 10px; gap: 8px; }
+        body.fullscreen #page-review .btn { padding: 12px; font-size: 14px; }
 
         /* ========== 主页 ========== */
         .home-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
@@ -224,7 +196,6 @@
         .start-btn:disabled { opacity: 0.5; }
 
         /* 复习页 */
-        .review-top-progress { margin: -16px -16px 12px -16px !important; border-radius: 0 !important; height: 4px !important; }
         .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .review-progress { font-size: 14px; color: #666; }
         .review-exit { background: #fff2f0; border: none; color: #ff4d4f; font-size: 13px; cursor: pointer; padding: 8px 14px; border-radius: 10px; font-weight: 600; }
@@ -802,8 +773,8 @@
                 <button class="home-menu-item" onclick="goToWordlist()">
                     <div class="home-menu-icon wordlist">📖</div>
                     <div class="home-menu-text">
-                        <div class="home-menu-title">单词学习</div>
-                        <div class="home-menu-desc">按List查看词汇，支持浏览和学习模式</div>
+                        <div class="home-menu-title">词表浏览</div>
+                        <div class="home-menu-desc">按List查看所有词汇，支持搜索</div>
                     </div>
                     <div class="home-menu-arrow">›</div>
                 </button>
@@ -816,7 +787,6 @@
                     </div>
                     <div class="home-menu-arrow">›</div>
                 </button>
-
             </div>
         </div>
 
@@ -860,11 +830,11 @@
 
         <!-- 复习页 -->
         <div class="page" id="page-review">
-            <div class="progress-bar review-top-progress"><div class="progress-fill" id="review-progress-fill" style="width:0%"></div></div>
             <div class="review-header">
                 <span class="review-progress" id="review-progress">第 1 / 60 题</span>
                 <button class="review-exit" onclick="exitReview()">退出</button>
             </div>
+            <div class="progress-bar"><div class="progress-fill" id="review-progress-fill" style="width:0%"></div></div>
             <div class="card word-card">
                 <div class="word-en" id="review-word-en">word</div>
                 <div class="word-phonetic" id="review-word-phonetic"></div>
@@ -909,7 +879,7 @@
         <div class="page" id="page-wordlist">
             <div class="page-header">
                 <button class="back-btn" onclick="goHome()">‹</button>
-                <div class="page-title">单词学习</div>
+                <div class="page-title">词表浏览</div>
             </div>
             <div class="card">
                 <div class="wl-controls">
@@ -928,7 +898,7 @@
         <div class="page" id="page-book-study">
             <div class="page-header">
                 <button class="back-btn" onclick="exitBookStudy()">‹</button>
-                <div class="page-title" id="book-study-title">单词学习</div>
+                <div class="page-title" id="book-study-title">词表学习</div>
             </div>
             <div class="book-study-container">
                 <div class="book-study-bg"></div>
@@ -961,22 +931,6 @@
                     <div class="book-complete-desc" id="book-complete-desc">恭喜你完成了本List的学习！</div>
                     <div class="book-complete-actions">
                         <button class="book-complete-btn" onclick="exitBookStudy()">退出学习</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- iOS安装引导弹窗 -->
-            <div class="book-complete-modal" id="ios-install-modal">
-                <div class="book-complete-content">
-                    <div class="book-complete-icon">📱</div>
-                    <div class="book-complete-title">添加到主屏幕</div>
-                    <div class="book-complete-desc" style="text-align:left;line-height:1.8;">
-                        请点击浏览器底部的 <strong>分享按钮</strong> <span style="font-size:20px;">⎋</span><br>
-                        然后选择 <strong>"添加到主屏幕"</strong><br>
-                        即可像APP一样使用拾词
-                    </div>
-                    <div class="book-complete-actions">
-                        <button class="book-complete-btn" onclick="document.getElementById('ios-install-modal').classList.remove('show')">我知道了</button>
                     </div>
                 </div>
             </div>
@@ -1117,164 +1071,9 @@
             console.log('typeof VocabApp:', typeof VocabApp);
         });
         
-        // PWA安装相关
-        let deferredPrompt = null;
-        let isInstalled = false;
-
-        // 检测是否已安装
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            isInstalled = true;
-        }
-
-        // 监听beforeinstallprompt（Android Chrome）
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            updateInstallButton();
-        });
-
-        // 监听安装完成
-        window.addEventListener('appinstalled', () => {
-            isInstalled = true;
-            deferredPrompt = null;
-            updateInstallButton();
-        });
-
-        function updateInstallButton() {
-            const btn = document.getElementById('install-btn');
-            if (!btn) return;
-            // 已安装则隐藏
-            if (isInstalled) {
-                btn.style.display = 'none';
-                return;
-            }
-            // 所有设备都显示按钮（包括Android、iOS、平板等）
-            btn.style.display = 'flex';
-        }
-
-        function promptInstall() {
-            // Android：触发原生安装提示
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('用户接受安装');
-                    }
-                    deferredPrompt = null;
-                    updateInstallButton();
-                });
-                return;
-            }
-            // 所有设备都显示引导弹窗（包括iOS、Android平板、其他设备）
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isAndroid = /Android/.test(navigator.userAgent);
-            
-            let guideText = '';
-            if (isIOS) {
-                guideText = '请点击浏览器底部的 <strong>分享按钮</strong> <span style="font-size:20px;">⎋</span><br>然后选择 <strong>"添加到主屏幕"</strong><br>即可像APP一样使用拾词';
-            } else if (isAndroid) {
-                guideText = '请点击浏览器右上角的 <strong>菜单按钮</strong> ⋮<br>然后选择 <strong>"添加到主屏幕"</strong> 或 <strong>"安装应用"</strong><br>即可像APP一样使用拾词';
-            } else {
-                guideText = '请点击浏览器菜单中的 <strong>"添加到主屏幕"</strong> 或 <strong>"安装应用"</strong> 功能<br>即可像APP一样使用拾词';
-            }
-            
-            const modal = document.getElementById('ios-install-modal');
-            modal.querySelector('.book-complete-desc').innerHTML = guideText;
-            modal.classList.add('show');
-        }
-
-        // 检测是否是微信浏览器
-        const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-        
-        // 自动弹出添加到桌面提示（不依赖load事件，直接判断readyState）
-        function tryShowInstallPrompt() {
-            if (isInstalled) return;
-            setTimeout(() => showInstallPrompt(), 1000);
-        }
-        
-        if (document.readyState === 'complete') {
-            tryShowInstallPrompt();
-        } else {
-            window.addEventListener('load', tryShowInstallPrompt);
-        }
-        
-        // 显示安装引导弹窗（所有设备都显示，不依赖系统事件）
-        function showInstallPrompt() {
-            const modal = document.getElementById('ios-install-modal');
-            if (!modal) return;
-            
-            modal.querySelector('.book-complete-title').textContent = '📱 添加到桌面';
-            
-            let guideText = '';
-            if (isWeChat) {
-                guideText = '请点击右上角的 <strong>···</strong> 按钮<br>然后选择 <strong>"添加到桌面"</strong><br>即可像APP一样使用拾词';
-            } else {
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                if (isIOS) {
-                    guideText = '请点击浏览器底部的 <strong>分享按钮</strong> <span style="font-size:20px;">⎋</span><br>然后选择 <strong>"添加到主屏幕"</strong><br>即可像APP一样使用拾词';
-                } else {
-                    guideText = '点击下方"立即安装"按钮<br>或点击浏览器菜单中的 <strong>"添加到桌面"</strong><br>即可像APP一样使用拾词';
-                }
-            }
-            
-            modal.querySelector('.book-complete-desc').innerHTML = guideText;
-            
-            // 修改按钮文字
-            const btn = modal.querySelector('.book-complete-btn');
-            if (deferredPrompt && !isWeChat && !/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-                btn.textContent = '立即安装';
-                btn.onclick = () => {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(() => {
-                        deferredPrompt = null;
-                        modal.classList.remove('show');
-                    });
-                };
-            } else {
-                btn.textContent = '我知道了';
-                btn.onclick = () => modal.classList.remove('show');
-            }
-            
-            modal.classList.add('show');
-        }
-        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(registration => {
-                    // 页面加载后立即检查更新
-                    registration.update().catch(() => {});
-                    
-                    // 检测到新版本时立即激活并刷新
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed') {
-                                // 立即让新的service worker激活
-                                newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                // 等待激活后刷新
-                                setTimeout(() => {
-                                    if (navigator.serviceWorker.controller) {
-                                        window.location.reload();
-                                    }
-                                }, 500);
-                            }
-                        });
-                    });
-                    
-                    // 每30秒检查一次更新
-                    setInterval(() => {
-                        registration.update().catch(() => {});
-                    }, 30000);
-                }).catch(err => console.log('SW注册失败:', err));
-                
-                // 当新的service worker激活时，自动刷新
-                let refreshing = false;
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    if (!refreshing) {
-                        refreshing = true;
-                        window.location.reload();
-                    }
-                });
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW注册失败:', err));
             });
         }
     </script>

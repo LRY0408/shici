@@ -1183,13 +1183,60 @@
             modal.classList.add('show');
         }
 
-        // 页面加载后更新安装按钮状态（已移除添加到桌面按钮，保留函数兼容）
-        window.addEventListener('load', () => {
-            // 已移除自动弹出添加到桌面提示
-        });
-
-        // 检测是否是微信浏览器（保留变量，已移除特殊引导）
+        // 检测是否是微信浏览器
         const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+        
+        // 自动弹出添加到桌面提示（不依赖load事件，直接判断readyState）
+        function tryShowInstallPrompt() {
+            if (isInstalled) return;
+            setTimeout(() => showInstallPrompt(), 1000);
+        }
+        
+        if (document.readyState === 'complete') {
+            tryShowInstallPrompt();
+        } else {
+            window.addEventListener('load', tryShowInstallPrompt);
+        }
+        
+        // 显示安装引导弹窗（所有设备都显示，不依赖系统事件）
+        function showInstallPrompt() {
+            const modal = document.getElementById('ios-install-modal');
+            if (!modal) return;
+            
+            modal.querySelector('.book-complete-title').textContent = '📱 添加到桌面';
+            
+            let guideText = '';
+            if (isWeChat) {
+                guideText = '请点击右上角的 <strong>···</strong> 按钮<br>然后选择 <strong>"添加到桌面"</strong><br>即可像APP一样使用拾词';
+            } else {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    guideText = '请点击浏览器底部的 <strong>分享按钮</strong> <span style="font-size:20px;">⎋</span><br>然后选择 <strong>"添加到主屏幕"</strong><br>即可像APP一样使用拾词';
+                } else {
+                    guideText = '点击下方"立即安装"按钮<br>或点击浏览器菜单中的 <strong>"添加到桌面"</strong><br>即可像APP一样使用拾词';
+                }
+            }
+            
+            modal.querySelector('.book-complete-desc').innerHTML = guideText;
+            
+            // 修改按钮文字
+            const btn = modal.querySelector('.book-complete-btn');
+            if (deferredPrompt && !isWeChat && !/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                btn.textContent = '立即安装';
+                btn.onclick = () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(() => {
+                        deferredPrompt = null;
+                        modal.classList.remove('show');
+                    });
+                };
+            } else {
+                btn.textContent = '我知道了';
+                btn.onclick = () => modal.classList.remove('show');
+            }
+            
+            modal.classList.add('show');
+        }
         
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1228,11 +1275,6 @@
                         window.location.reload();
                     }
                 });
-            });
-        }
-                        modal.classList.add('show');
-                    }
-                }, 2000);
             });
         }
     </script>
