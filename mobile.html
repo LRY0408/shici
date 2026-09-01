@@ -1251,24 +1251,36 @@
             }
         });
 
+        // 检测是否是微信浏览器
+        const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js').then(registration => {
-                    // 检测到新版本时自动更新
+                    // 页面加载后立即检查更新
+                    registration.update().catch(() => {});
+                    
+                    // 检测到新版本时立即激活并刷新
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
                         newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // 有新版本可用，自动刷新页面
-                                window.location.reload();
+                            if (newWorker.state === 'installed') {
+                                // 立即让新的service worker激活
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                // 等待激活后刷新
+                                setTimeout(() => {
+                                    if (navigator.serviceWorker.controller) {
+                                        window.location.reload();
+                                    }
+                                }, 500);
                             }
                         });
                     });
                     
-                    // 每分钟检查一次更新
+                    // 每30秒检查一次更新
                     setInterval(() => {
                         registration.update().catch(() => {});
-                    }, 60000);
+                    }, 30000);
                 }).catch(err => console.log('SW注册失败:', err));
                 
                 // 当新的service worker激活时，自动刷新
@@ -1279,6 +1291,24 @@
                         window.location.reload();
                     }
                 });
+            });
+        }
+        
+        // 微信浏览器特殊处理：显示添加到桌面引导
+        if (isWeChat && !isInstalled) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const modal = document.getElementById('ios-install-modal');
+                    if (modal) {
+                        modal.querySelector('.book-complete-title').textContent = '添加到桌面';
+                        modal.querySelector('.book-complete-desc').innerHTML = 
+                            '请点击右上角的 <strong>···</strong> 按钮<br>' +
+                            '然后选择 <strong>"添加到桌面"</strong><br>' +
+                            '即可像APP一样使用拾词<br><br>' +
+                            '<span style="font-size:12px;color:#999;">微信浏览器不支持自动安装，请手动添加</span>';
+                        modal.classList.add('show');
+                    }
+                }, 2000);
             });
         }
     </script>
