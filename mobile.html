@@ -1191,16 +1191,8 @@
                 btn.style.display = 'none';
                 return;
             }
-            // Android且有beforeinstallprompt事件则显示
-            if (deferredPrompt) {
-                btn.style.display = 'flex';
-                return;
-            }
-            // iOS设备也显示（点击后引导手动添加）
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS) {
-                btn.style.display = 'flex';
-            }
+            // 所有设备都显示按钮（包括Android、iOS、平板等）
+            btn.style.display = 'flex';
         }
 
         function promptInstall() {
@@ -1216,19 +1208,47 @@
                 });
                 return;
             }
-            // iOS：显示引导弹窗
+            // 所有设备都显示引导弹窗（包括iOS、Android平板、其他设备）
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            let guideText = '';
             if (isIOS) {
-                document.getElementById('ios-install-modal').classList.add('show');
-                return;
+                guideText = '请点击浏览器底部的 <strong>分享按钮</strong> <span style="font-size:20px;">⎋</span><br>然后选择 <strong>"添加到主屏幕"</strong><br>即可像APP一样使用拾词';
+            } else if (isAndroid) {
+                guideText = '请点击浏览器右上角的 <strong>菜单按钮</strong> ⋮<br>然后选择 <strong>"添加到主屏幕"</strong> 或 <strong>"安装应用"</strong><br>即可像APP一样使用拾词';
+            } else {
+                guideText = '请点击浏览器菜单中的 <strong>"添加到主屏幕"</strong> 或 <strong>"安装应用"</strong> 功能<br>即可像APP一样使用拾词';
             }
-            // 其他设备：提示
-            alert('请使用浏览器菜单中的"添加到主屏幕"或"安装应用"功能');
+            
+            const modal = document.getElementById('ios-install-modal');
+            modal.querySelector('.book-complete-desc').innerHTML = guideText;
+            modal.classList.add('show');
         }
 
-        // 页面加载后更新安装按钮状态
+        // 页面加载后更新安装按钮状态，并自动弹出添加到桌面提示
         window.addEventListener('load', () => {
             setTimeout(updateInstallButton, 500);
+            
+            // 未安装时，自动弹出添加到桌面提示（每7天最多弹一次）
+            if (!isInstalled) {
+                setTimeout(() => {
+                    try {
+                        const lastPrompt = localStorage.getItem('shici_last_install_prompt');
+                        const now = Date.now();
+                        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                        
+                        // 第一次提示，或者距离上次提示超过7天
+                        if (!lastPrompt || (now - parseInt(lastPrompt)) > sevenDays) {
+                            promptInstall();
+                            localStorage.setItem('shici_last_install_prompt', now.toString());
+                        }
+                    } catch(e) {
+                        // localStorage不可用时直接提示
+                        promptInstall();
+                    }
+                }, 2000); // 页面加载2秒后弹出
+            }
         });
 
         if ('serviceWorker' in navigator) {
