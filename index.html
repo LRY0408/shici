@@ -117,6 +117,35 @@
             padding: 0 !important;
             margin: 0 !important;
         }
+        body.fullscreen #page-review {
+            height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        body.fullscreen #page-review .review-top-progress {
+            flex-shrink: 0;
+            margin: 0 !important;
+        }
+        body.fullscreen #page-review .review-header {
+            flex-shrink: 0;
+            padding: 12px 16px 0 16px;
+        }
+        body.fullscreen #page-review .word-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 16px;
+        }
+        body.fullscreen #page-review .review-actions {
+            flex-shrink: 0;
+            padding: 0 16px 16px 16px;
+            margin-top: 0;
+        }
         body.fullscreen #page-book-study {
             max-width: 100%;
             height: 100vh;
@@ -129,8 +158,7 @@
         }
         
         /* 全屏模式下复习页面紧凑布局，确保所有按钮都能显示 */
-        body.fullscreen #page-review .review-header { margin-bottom: 8px; }
-        body.fullscreen #page-review .progress-bar { margin-bottom: 10px; }
+        body.fullscreen #page-review .review-header { margin-bottom: 8px; padding: 12px 16px 0 16px; }
         body.fullscreen #page-review .word-card { padding: 16px; }
         body.fullscreen #page-review .word-en { font-size: 28px; margin-bottom: 4px; }
         body.fullscreen #page-review .word-phonetic { margin-bottom: 2px; }
@@ -196,6 +224,7 @@
         .start-btn:disabled { opacity: 0.5; }
 
         /* 复习页 */
+        .review-top-progress { margin: -16px -16px 12px -16px !important; border-radius: 0 !important; height: 4px !important; }
         .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .review-progress { font-size: 14px; color: #666; }
         .review-exit { background: #fff2f0; border: none; color: #ff4d4f; font-size: 13px; cursor: pointer; padding: 8px 14px; border-radius: 10px; font-weight: 600; }
@@ -839,11 +868,11 @@
 
         <!-- 复习页 -->
         <div class="page" id="page-review">
+            <div class="progress-bar review-top-progress"><div class="progress-fill" id="review-progress-fill" style="width:0%"></div></div>
             <div class="review-header">
                 <span class="review-progress" id="review-progress">第 1 / 60 题</span>
                 <button class="review-exit" onclick="exitReview()">退出</button>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="review-progress-fill" style="width:0%"></div></div>
             <div class="card word-card">
                 <div class="word-en" id="review-word-en">word</div>
                 <div class="word-phonetic" id="review-word-phonetic"></div>
