@@ -1118,7 +1118,7 @@
         });
         
         // PWA安装相关
-        // PWA安装相关 - 不阻止默认行为，让系统自动显示原生安装提示
+        // PWA安装相关 - 自动触发系统原生安装提示
         let deferredPrompt = null;
         let isInstalled = false;
 
@@ -1127,9 +1127,19 @@
             isInstalled = true;
         }
 
-        // 监听beforeinstallprompt（不preventDefault，让系统自动显示原生安装提示）
+        // 监听beforeinstallprompt（阻止默认行为，然后自动触发）
         window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
             deferredPrompt = e;
+            // 延迟1秒后自动触发系统原生安装提示
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(() => {
+                        deferredPrompt = null;
+                    });
+                }
+            }, 1000);
         });
 
         // 监听安装完成
