@@ -1118,29 +1118,43 @@
         });
         
         // PWA安装相关
-        // PWA安装相关 - 自动触发系统原生安装提示
+        // PWA安装相关 - 用户第一次点击时触发系统原生安装提示
         let deferredPrompt = null;
         let isInstalled = false;
+        let installPrompted = false;
 
         // 检测是否已安装
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
             isInstalled = true;
         }
 
-        // 监听beforeinstallprompt（阻止默认行为，然后自动触发）
+        // 监听beforeinstallprompt（阻止默认行为，保存事件对象）
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // 延迟1秒后自动触发系统原生安装提示
-            setTimeout(() => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(() => {
-                        deferredPrompt = null;
-                    });
-                }
-            }, 1000);
         });
+
+        // 用户第一次点击页面时触发安装提示（需要用户手势才能调用prompt）
+        window.addEventListener('click', function triggerInstallPrompt() {
+            if (installPrompted || isInstalled) return;
+            if (!deferredPrompt) return;
+            
+            installPrompted = true;
+            try {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    deferredPrompt = null;
+                }).catch(() => {
+                    deferredPrompt = null;
+                });
+            } catch (err) {
+                console.log('安装提示触发失败:', err);
+                deferredPrompt = null;
+            }
+            
+            // 移除监听器，只触发一次
+            window.removeEventListener('click', triggerInstallPrompt);
+        }, { once: true });
 
         // 监听安装完成
         window.addEventListener('appinstalled', () => {
