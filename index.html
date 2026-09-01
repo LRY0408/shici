@@ -1117,11 +1117,12 @@
             console.log('typeof VocabApp:', typeof VocabApp);
         });
         
-        // 学习页面左右滑动切换
+        // 学习页面左右滑动切换（立即绑定，不等待load）
         let touchStartX = 0;
         let touchStartY = 0;
         let isSwiping = false;
-
+        
+        // 立即绑定到document，确保事件一定能触发
         document.addEventListener('touchstart', (e) => {
             const bookPage = document.getElementById('page-book-study');
             if (!bookPage || !bookPage.classList.contains('active')) return;
@@ -1129,28 +1130,33 @@
             touchStartY = e.touches[0].clientY;
             isSwiping = true;
         }, { passive: true });
-
+        
         document.addEventListener('touchend', (e) => {
             const bookPage = document.getElementById('page-book-study');
             if (!bookPage || !bookPage.classList.contains('active') || !isSwiping) return;
             isSwiping = false;
-
+            
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
-
-            // 水平滑动距离大于50px，且水平移动大于垂直移动（避免误触）
-            if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            
+            // 水平滑动距离大于30px，且水平移动大于垂直移动（避免误触）
+            if (Math.abs(deltaX) > 30 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 if (deltaX < 0) {
                     // 左滑 → 下一个
-                    bookNextWord();
+                    if (typeof bookNextWord === 'function') bookNextWord();
                 } else {
                     // 右滑 → 上一个
-                    bookPrevWord();
+                    if (typeof bookPrevWord === 'function') bookPrevWord();
                 }
             }
         }, { passive: true });
+        
+        // 设置学习界面的touch-action，允许垂直滚动但优化水平滑动
+        const style = document.createElement('style');
+        style.textContent = '.book-study-container { touch-action: pan-y; }';
+        document.head.appendChild(style);
 
         // PWA安装相关
         let deferredPrompt = null;
