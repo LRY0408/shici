@@ -3114,6 +3114,50 @@ class VocabApp {
         document.getElementById('book-study-title').textContent = listKey;
         this.navigateTo('book-study');
         this.renderBookWord();
+        
+        // 绑定左右滑动事件（绑定到学习界面容器，确保一定能触发）
+        this.bindBookSwipe();
+    }
+    
+    bindBookSwipe() {
+        const container = document.querySelector('.book-study-container');
+        if (!container) return;
+        
+        // 先解绑之前的事件，避免重复绑定
+        if (this._swipeHandlers) {
+            container.removeEventListener('touchstart', this._swipeHandlers.start);
+            container.removeEventListener('touchend', this._swipeHandlers.end);
+        }
+        
+        let startX = 0, startY = 0;
+        
+        this._swipeHandlers = {
+            start: (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            },
+            end: (e) => {
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                
+                // 水平滑动大于20px，且水平移动大于垂直移动
+                if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX < 0) {
+                        this.bookNextWord(); // 左滑下一个
+                    } else {
+                        this.bookPrevWord(); // 右滑上一个
+                    }
+                }
+            }
+        };
+        
+        container.addEventListener('touchstart', this._swipeHandlers.start, { passive: true });
+        container.addEventListener('touchend', this._swipeHandlers.end, { passive: true });
+        
+        // 设置touch-action为none，确保不被浏览器默认行为拦截
+        container.style.touchAction = 'none';
     }
 
     renderBookWord() {
@@ -3257,6 +3301,18 @@ class VocabApp {
         let modal = document.getElementById('book-complete-modal');
         if (modal) modal.classList.remove('show');
         this.bookStudy = null;
+        
+        // 解绑左右滑动事件
+        if (this._swipeHandlers) {
+            const container = document.querySelector('.book-study-container');
+            if (container) {
+                container.removeEventListener('touchstart', this._swipeHandlers.start);
+                container.removeEventListener('touchend', this._swipeHandlers.end);
+                container.style.touchAction = '';
+            }
+            this._swipeHandlers = null;
+        }
+        
         // 直接返回到词表浏览页面，确保返回逻辑稳定
         this.currentPage = 'wordlist';
         history.replaceState({page: 'wordlist'}, '', '#wordlist');
