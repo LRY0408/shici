@@ -117,7 +117,7 @@
             padding: 0 !important;
             margin: 0 !important;
         }
-        body.fullscreen #page-review {
+        body.fullscreen #page-review.active {
             height: 100vh !important;
             display: flex !important;
             flex-direction: column !important;
@@ -126,22 +126,22 @@
             padding: 0 !important;
             margin: 0 !important;
         }
-        body.fullscreen #page-review .review-top-progress {
+        body.fullscreen #page-review.active .review-top-progress {
             flex-shrink: 0;
             margin: 0 !important;
         }
-        body.fullscreen #page-review .review-header {
+        body.fullscreen #page-review.active .review-header {
             flex-shrink: 0;
             padding: 12px 16px 0 16px;
         }
-        body.fullscreen #page-review .word-card {
+        body.fullscreen #page-review.active .word-card {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             margin: 0 16px;
         }
-        body.fullscreen #page-review .review-actions {
+        body.fullscreen #page-review.active .review-actions {
             flex-shrink: 0;
             padding: 0 16px 16px 16px;
             margin-top: 0;
@@ -158,17 +158,17 @@
         }
         
         /* 全屏模式下复习页面紧凑布局，确保所有按钮都能显示 */
-        body.fullscreen #page-review .review-header { margin-bottom: 8px; padding: 12px 16px 0 16px; }
-        body.fullscreen #page-review .word-card { padding: 16px; }
-        body.fullscreen #page-review .word-en { font-size: 28px; margin-bottom: 4px; }
-        body.fullscreen #page-review .word-phonetic { margin-bottom: 2px; }
-        body.fullscreen #page-review .word-pos { margin-bottom: 12px; }
-        body.fullscreen #page-review .input-group { margin-bottom: 8px; }
-        body.fullscreen #page-review .input-row { margin-bottom: 6px; }
-        body.fullscreen #page-review .meaning-input { padding: 10px 12px; font-size: 14px; }
-        body.fullscreen #page-review .answer-box { padding: 10px; margin-top: 10px; }
-        body.fullscreen #page-review .review-actions { margin-top: 10px; gap: 8px; }
-        body.fullscreen #page-review .btn { padding: 12px; font-size: 14px; }
+        body.fullscreen #page-review.active .review-header { margin-bottom: 8px; padding: 12px 16px 0 16px; }
+        body.fullscreen #page-review.active .word-card { padding: 16px; }
+        body.fullscreen #page-review.active .word-en { font-size: 28px; margin-bottom: 4px; }
+        body.fullscreen #page-review.active .word-phonetic { margin-bottom: 2px; }
+        body.fullscreen #page-review.active .word-pos { margin-bottom: 12px; }
+        body.fullscreen #page-review.active .input-group { margin-bottom: 8px; }
+        body.fullscreen #page-review.active .input-row { margin-bottom: 6px; }
+        body.fullscreen #page-review.active .meaning-input { padding: 10px 12px; font-size: 14px; }
+        body.fullscreen #page-review.active .answer-box { padding: 10px; margin-top: 10px; }
+        body.fullscreen #page-review.active .review-actions { margin-top: 10px; gap: 8px; }
+        body.fullscreen #page-review.active .btn { padding: 12px; font-size: 14px; }
 
         /* ========== 主页 ========== */
         .home-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
